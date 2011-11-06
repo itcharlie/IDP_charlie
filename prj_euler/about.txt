@@ -1,0 +1,1 @@
+This is a directory for scripts that will answer mathematical questions from Project Euler website : http://projecteuler.net/
