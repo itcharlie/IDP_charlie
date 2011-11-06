@@ -36,7 +36,7 @@ for my $natural ( 1 ... 999 ) {
 
 }
 
-print Dumper( \@list );
+#print Dumper( \@list );
 
 $sum += $_ for @list;
 
