@@ -8,4 +8,26 @@ use Data::Dumper;
 # four million, find the sum of the even-valued terms.
 
 
+my $term_one = 1;
+my $term_two = 1;
+my $new_term;
+my @list_term;
 
+for (1 ... 3999999) {
+
+ #for ( 1 ... 10) { 
+     if ( $term_one >= 1) {
+       $new_term = $term_one + $term_two;
+       $term_two = $term_one;
+       $term_one = $new_term;
+        
+        if ( ($new_term/2  ) !~ /\D/ ) {
+            push( @list_term , $new_term );
+        }
+         
+      } 
+
+}
+
+print Dumper(\@list_term);
+print eval ( join ( '+' , @list_term) ) ;
