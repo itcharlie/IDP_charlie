@@ -30,4 +30,4 @@ for (1 ... 3999999) {
 }
 
 print Dumper(\@list_term);
-print eval ( join ( '+' , @list_term) ) ;
+print eval ( join ( '+' , @list_term) ) . "\n";
