@@ -11,13 +11,38 @@ use Data::Dumper;
 #  and using this list I will attempt to determine the prime numbers 
 #   for  600851475143
 my @prime_num;
-
+my $total = 600851475143;
+my @prime_factors;
 
 for  my $term ( 2 ... 1000) {
      is_prime($term);
 }
 
-print Dumper(\@prime_num);
+print Dumper(\@prime_factors);
+#print Dumper(\@prime_num);
+# The approach to determine prime factors for  600851475143
+# is to divide the number by the first prime number evenly and if that happens
+# assign that number to the list of prime numbers. The remainder of the calculation 
+# is then used to determine the next prime number.
+
+sub prime_factors {
+    my $num  = shift;
+    my $tmp_num =  $total;
+    my $result;
+    
+      for my $factor ( @prime_num) {
+	CALC:   $result = $tmp_num / $factor ;
+	  
+	  if ( $result !~ /\D/) {
+	           push( @prime_factors,  $factor );
+	           $tmp_num = $result;
+	           redo CALC;
+          } else {
+           	  next;
+          }
+		        
+	             }	
+	}
 sub is_prime{
 	my $num = shift;
 	
@@ -35,3 +60,5 @@ sub is_prime{
 		  push( @prime_num  , $num) ;
          };
 	}
+
+
