@@ -7,5 +7,35 @@ use Data::Dumper;
 
 # I will first use the example to detemine how the numbers are found.
 
-my @list_two = ( 10 ... 99 );
+my @list_two = ( 100 ... 999 );
+my %result;
+my @palindrome;
+
+foreach my $number (@list_two) {
+  foreach my $number2 (@list_two)  {
+     
+     my $value = $number . "," . $number2;
+     $result{$number *$number2}= $value;
+  }
+  
+}
+
+
+foreach my $key  ( keys (%result) )  {
+  is_palindrome($key);
+
+}
+
+
+
+sub is_palindrome {
+  my $term = shift;
+  if ( $term - ( reverse($term) ) == 0 ) {
+     push( @palindrome , $term );
+  }
+  
+}
+my @sorted = sort {$b <=> $a} @palindrome;
+
+print $sorted[0] ." => " . $result{$sorted[0]} . "\n";
 
