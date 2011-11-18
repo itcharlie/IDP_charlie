@@ -10,12 +10,12 @@ use Data::Dumper;
 
 my @list;
 my $sum; 
-
+# Make another version with % operator;
 #
 #  Loop thru all numbers from 1 - 1000
 #  and divide them by 5 and 3. 
 
-for my $natural ( 1 ... 999 ) { 
+for my $natural ( 1 .. 999 ) { 
 
 # loop to verify that it is working 
 # by comparing sum with sum stated 
