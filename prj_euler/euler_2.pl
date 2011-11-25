@@ -8,7 +8,6 @@ use bigint;
 # By considering the terms in the Fibonacci sequence whose values do not exceed
 # four million, find the sum of the even-valued terms.
 
-# rewrite this script with modulus operator.
 # rewrite with recursion
 
 my $term_one = 1;
