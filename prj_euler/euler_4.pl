@@ -7,7 +7,7 @@ use Data::Dumper;
 
 # I will first use the example to detemine how the numbers are found.
 
-my @list_two = ( 100 ... 999 );
+my @list_two = ( 100 .. 999 );
 my %result;
 my @palindrome;
 

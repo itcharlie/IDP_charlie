@@ -21,14 +21,12 @@ my $half = int($total/2);
     
     if ( $term == $half ) { 
         die "Unable to find prime factor\n $!";
-    } else {
-    
+    } 
       my $prime = is_prime($term);
       print prime "\n";
       if ($prime eq "ok") {
           prime_factors($term);
-      }
-    }    
+      }    
 }
 
 continue{
