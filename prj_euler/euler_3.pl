@@ -13,11 +13,13 @@ use bignum;
 
 my $total     = 600851475143;
 #my $total     = 13195;
-my $quarter  = int(($total/4));
 
-for ( my $term = $quarter; $term>= 2; $term--) {
+my $one_percent  = int(($total*.01));
 
 
+
+
+for ( my $term = $one_percent; $term>= 2; $term--) {
     
     if ( $term == 2 ) { 
         die "Unable to find prime factor\n $!";
