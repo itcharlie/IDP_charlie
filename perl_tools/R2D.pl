@@ -33,17 +33,18 @@ sub convert_to_dancer {
 sub app_name {
 	my $app_dir = shift;
 	my $config = $app_dir . "config/application.rb";	
-	#TODO: Fix this function	
+	
 	open( my $ofh, "<", $config )
       or die "Unable to open $config $!\n";
-	while ( my $string = <$ofh> ) {
-		if ( $string =~ /module\s\w/) {
-			$string =~ s/module//g;
+	while ( <$ofh> ) {
+		my $string = $_;
+		if ( $string =~ /^module/) {
+			$string =~ s/module //g;
 			$string =~ s/\r|\n//g;
-		}	return $string;	
+			return $string;	
+		}	
 	}
 
-	return;
 }
 
 
