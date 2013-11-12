@@ -22,12 +22,17 @@ elsif ( !$app_dir =~ /\/$/ ) {
 $app{'NAME'}        = app_name($app_dir);
 $app{'ROUTES'}      = routes_parser($app_dir);
 $app{'CONTROLLERS'} = controller_parser($app_dir);
+convert_to_dancer(\%app);
 
-print Dumper( \%app );
 
 # recreate controller and routes in Dancer
+# inside home directory
 sub convert_to_dancer {
     my $app = shift;
+    
+    chdir( $ENV{HOME} ) or die ( "Unable to cd to $ENV{HOME} " );
+    exec( "dancer -a  $app{NAME}" )  or die ( "Unable to create Dancer $app{NAME} $!" );
+
 }
 
 sub app_name {
