@@ -31,7 +31,35 @@ sub convert_to_dancer {
     my $app = shift;
     
     chdir( $ENV{HOME} ) or die ( "Unable to cd to $ENV{HOME} " );
-    exec( "dancer -a  $app{NAME}" )  or die ( "Unable to create Dancer $app{NAME} $!" );
+    system( "dancer -a  $app{NAME}" ) == 0 or die ( "Unable to create Dancer $app{NAME} $!" );
+    my $controller_dir = "$ENV{HOME}/$app{NAME}/lib/CONTROLLERS";
+    mkdir( $controller_dir ) or die "UNABLE to create directory\n $!";
+    foreach my $controller ( keys($app{'CONTROLLERS'})  ) {
+    	my $module_name =  uc($controller);
+	my $module_filepath = "$ENV{HOME}/$app{NAME}/lib/CONTROLLERS/$module_name\.PM";
+    	open(my $module, ">$module_filepath" ) 
+		or die "Unable to open $module_filepath\n $!\n ";
+    	    
+    	    
+    	    
+    	print $module <<"controller_module";
+package $app{NAME}::$module_name;
+use Dancer ':syntax';
+
+controller_module
+
+
+# ADD actions with post or get requests
+#prefix '/$module_name';
+#
+#get '/' => sub {
+#
+#    template '';
+#};
+#
+#true;
+
+    }
 
 }
 
