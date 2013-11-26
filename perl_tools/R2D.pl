@@ -11,12 +11,14 @@ my %app = ();
 GetOptions( "app_dir=s" => \$app_dir )    # numeric
   or die("Error in command line arguments\n");
 
+if ( ! $app_dir =~ /\/$/ ) {
+    $app_dir .= "/";
+}
+
 if ( !-d $app_dir ) {
     die "Directory $app_dir doesn't exist\n";
 }
-elsif ( !$app_dir =~ /\/$/ ) {
-    $app_dir .= "/";
-}
+
 
 # Determine Controllers and routes
 $app{'NAME'}        = app_name($app_dir);
@@ -48,16 +50,17 @@ use Dancer ':syntax';
 
 controller_module
 
+	print $module "prefix '/" . lc($module_name) . "';\n\n";
+	
+	if ( $app{'ROUTES'}{lc($module_name)} ){
+		for my $action ( keys( $app{'ROUTES'}{lc($module_name)}) ) {
 
-# ADD actions with post or get requests
-#prefix '/$module_name';
-#
-#get '/' => sub {
-#
-#    template '';
-#};
-#
-#true;
+			print $module $action . " '" . $app{'ROUTES'}{lc($module_name)}{$action} . "' => sub{\n\n};\n\n";
+		}
+
+		print $module "true;"
+	};
+
 
     }
 
