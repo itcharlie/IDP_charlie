@@ -5,6 +5,8 @@
 
 use strict; 
 use Data::Dumper;
+use LWP::Simple;
+use JSON;
 
 my $file = $ARGV[0];
 
@@ -14,7 +16,7 @@ open( my $fh , "<", $file )
 
 # Parse bundle file and determine distribution file url for each module version
 my %modules =();
-
+my %undef_versions = ();
 my $head_cont = 0;
 
 while ( my $line  = <$fh>) {
@@ -30,12 +32,55 @@ while ( my $line  = <$fh>) {
 	$line =~ s/ +/ /g;
 	my @fields =  split( ' ', $line);
 	
-	$modules{$fields[0]}{'VERSION'} = $fields[1];
+	# skip functions 
+	next if $fields[0] =~ /^[a-z]/;
+	# skip undef module versions 
+	if ( $fields[1] == "undef") {
+		$undef_versions{$fields[0]} = 1;
+		next;	
+        }
 	
-	# Attempt to search for Module archive via cpan api.
-	# Store the archive url in the hash for the modules that do have versions defined
-	# Make a list of the undefined modules ( Need to write a script to determine version of these modules )
-	# Create a Pinto repo and pass in the ur
+	$modules{$fields[0]}{'VERSION'} = $fields[1];
 }
 
-print Dumper \%modules;
+my %dist_archives =();
+for my $mod ( keys %modules ) {
+	# Store the archive url in the hash for the modules that do have versions defined
+	my $archive_url = dist_archive_url( $mod, $modules{$mod}{'VERSION'} ) ;
+	next if ( ! $archive_url );
+	$dist_archives{$archive_url} = 1;
+}
+
+print Dumper \%dist_archives;
+#print Dumper \%undef_versions;
+
+
+# Attempt to search for Module archive via cpan api.
+sub dist_archive_url {
+	
+	my ($mod , $version) = @_;
+
+	my $json = JSON->new();
+	my $search_cpan = "http://search.cpan.org/api/";
+	my $mod_url  = $search_cpan . "module/" . $mod;	
+	my $mod_data_json  = get( $mod_url);
+	my $mod_data =  $json->decode(  $mod_data_json ) ;
+
+	my $dist = $mod_data->{'distvname'};
+	$dist =~ s/\-\d+\.\d+$//; # remove the version number
+	my $dist_url = "http://search.cpan.org/api/dist/" . $dist ;
+	my $dist_data_json  = get( $dist_url);
+	my $dist_data =  $json->decode(  $dist_data_json ) ;
+
+	my $archive_url;	
+	for my $release  ( @{$dist_data->{releases}} ) {
+		if ( $release->{version} eq $version ) {
+			$archive_url =  $release->{cpanid} . "/" . $release->{'archive'};
+		}
+	}
+ 	return $archive_url;
+}
+
+
+
+# Create a Pinto repo and pass in the ur
