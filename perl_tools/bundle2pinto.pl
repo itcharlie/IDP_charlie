@@ -21,7 +21,7 @@ my $head_cont = 0;
 
 my $REPO = "bundle_" . time();
 
-# Create a Pinto repo and pass in the ur
+# Create a Pinto repo 
 system( "pinto -r ~/" . $REPO . " init") ==0 
 	or die "Unable to create pinto repo : $REPO $!";
 
@@ -61,34 +61,21 @@ for my $mod  ( keys %modules ) {
 	$count++;
 }
 
-#print Dumper \%dist_archives;
-#print Dumper \%undef_versions;
 
-mkdir($ENV{HOME} . "/cpan_archive") if ( ! -d $ENV{HOME} . "/cpan_archive");
-chdir($ENV{HOME} . "/cpan_archive");
 
 for my $archive_url ( keys %dist_archives ) {
-	my @archive_string = split( /\// , $archive_url );
-	my $archive_file = $archive_string[-1];
-	if ( -f $archive_file ) {
-		add_to_repo($archive_file);
-		next;
-	}
-	my $cmd = "wget " . $archive_url;
-	system( $cmd ) == 0 
-		or die "Unable to download file $archive_url  $!\n";
 	
-	add_to_repo($archive_file);
+	add_to_repo($archive_url);
 }
 
 sub add_to_repo {
-	my $archive_file = shift;
+	my $archive_url = shift;
 	
-	# Need to figure out a way to auto commit with default message		
-	my $cmd = "pinto -r ~/" . $REPO . " add " . $ENV{HOME} . "/cpan_archive/" . $archive_file;
+	# Pass in the archive url to pinto 		
+	my $cmd = "pinto -r ~/" . $REPO . " pull " . $archive_url . " -M";
 	
 	system( $cmd ) == 0 
-		or die "Unable to add $archive_file to repo $!";
+		or die "Unable to add $archive_url to repo $!";
 	return 1;
 }
 
@@ -112,11 +99,7 @@ sub dist_archive_url {
 	my $archive_url;	
 	for my $release  ( @{$dist_data->{releases}} ) {
 		if ( $release->{version} eq $version ) {
-			$archive_url =  "http://search.cpan.org/CPAN/authors/id/"
-			. substr($release->{cpanid},0,1) . "/" 
-			. substr($release->{cpanid},0,2) . "/" 
-			. $release->{cpanid} . "/"
-			. $release->{'archive'};
+			$archive_url = $release->{cpanid} . "/"	. $release->{'archive'};
 		}
 	}
  	return $archive_url;
