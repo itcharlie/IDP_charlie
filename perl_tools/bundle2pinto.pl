@@ -161,6 +161,7 @@ sub dist_archive_url {
 	for my $release  ( @{$dist_data->{releases}} ) {
 		if ( $release->{version} eq $version ) {
 			$archive_url = $release->{cpanid} . "/"	. $release->{'archive'};
+			last;
 		}
 	}
  	return $archive_url;
