@@ -1,3 +1,5 @@
+#!/usr/bin/perl
+
 use strict;
 
 use HTML::TokeParser;
@@ -20,7 +22,6 @@ if ($response->is_success) {
 	my $counter = 0 ;
 	while ( my $token = $stream->get_token() ) {
 		
-		
 
 		if ( defined($token->[0]) ) {
 			if ( ( $token->[0] eq "S")
@@ -28,7 +29,6 @@ if ($response->is_success) {
 			) {
 				if( $token->[2]{'itemprop'} eq 'name' ){
 					$open_houses{$counter}{name} =  $token->[2]{'content'};
-					$counter++;
 					next;
 				}
 			}
@@ -54,13 +54,16 @@ if ($response->is_success) {
 			$listing_price =~ s/\s//g;
 			$open_houses{$counter}{list_price} = $listing_price;
 			$found_listing_price =0;
+			$counter++;
 		}
+
 		if ( ( $token->[0] eq "S")
 			and ( $token->[1] eq 'strong')
 			and ( $token->[2]{'class'} =~ /listingPrice\s$/ )
 		) {
 			$found_listing_price =1;
 		}
+
        };
 	print Dumper \%open_houses;
 }
