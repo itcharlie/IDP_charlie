@@ -1,6 +1,6 @@
 #!/bin/bash
 sudo apt-get -y update && sudo apt-get -y upgrade 
-sudo apt-get install -y  build-essential git libssl-dev libreadline-dev zlib1g-dev sqlite3 libsqlite3-dev
+sudo apt-get install -y  build-essential git libssl-dev libreadline-dev zlib1g-dev sqlite3 libsqlite3-dev nodejs
 
 git clone https://github.com/rbenv/rbenv.git ~/.rbenv
 
